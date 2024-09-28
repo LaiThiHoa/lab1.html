@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #ccc;
+            margin-bottom: 20px;
+        }
+        .tab, .sub-tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            border-bottom: none;
+            background: #eaeaea;
+            margin-right: 5px;
+            border-radius: 5px 5px 0 0;
+            transition: background 0.3s;
+        }
+        .tab:hover, .sub-tab:hover {
+            background: #d4d4d4;
+        }
+        .tab.active, .sub-tab.active {
+            background: #0e64e4; /* Màu xanh da trời cho tab được chọn */
+            color: #fff;
+            font-weight: bold;
+            border-bottom: 1px solid #87CEEB; /* Thay đổi màu đường dưới */
+        }
+        .content {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 20px;
+            background: #fff;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .button {
+            padding: 10px 15px;
+            border: none;
+            background: #5cb85c;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+        .button:hover {
+            background: #4cae4c;
+        }
+        .cv-entry {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background: #f9f9f9;
+        }
+
+        .edit-button, .delete-button {
+            cursor: pointer;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            margin-left: 5px;
+        }
+        .edit-button {
+            background: #0a58cce0;
+        }
+        .delete-button {
+            background: #dc3545;
+        }
+    </style>
+</head>
+<body>
+
+<div class="tabs">
+    <div class="tab active" onclick="showTab('home')">Home</div>
+    <div class="tab" onclick="showTab('about')">About</div>
+    <div class="tab" onclick="showTab('labs')">Labs</div>
+</div>
+
+<div id="content" class="content">
+    <div id="home" class="tab-content">
+        <h1>Welcome to Home</h1>
+    </div>
+    <div id="about" class="tab-content" style="display: none;">
+        <h1>Tạo CV đơn giản</h1>
+        <form id="cv-form">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" required>
+            </div>
+            <div class="form-group">
+                <label for="experience">Experience:</label>
+                <textarea id="experience" rows="3" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="education">Education:</label>
+                <textarea id="education" rows="3" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="skills">Skills:</label>
+                <input type="text" id="skills" required>
+            </div>
+            <button type="button" class="button" onclick="addInfo()">Add</button>
+        </form>
+        <div id="cv-output"></div>
+    </div>
+    <div id="labs" class="tab-content" style="display: none;">
+        <h1>Labs</h1>
+        <div class="sub-tabs">
+            <div class="sub-tab active" onclick="showSubTab('lab1')">Lab1</div>
+            <div class="sub-tab" onclick="showSubTab('lab2')">Lab2</div>
+            <div class="sub-tab" onclick="showSubTab('lab3')">Lab3</div>
+        </div>
+        <div id="lab1" class="sub-tab-content">
+            <h2>Lab 1 Content</h2>
+        
+        </div>
+        <div id="lab2" class="sub-tab-content" style="display: none;">
+            <h2>Lab 2 Content</h2>
+         
+        </div>
+        <div id="lab3" class="sub-tab-content" style="display: none;">
+            <h2>Lab 3 Content</h2>
+         
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentEditIndex = null;
+
+    function showTab(tabName) {
+        const tabs = document.querySelectorAll('.tab-content');
+        tabs.forEach(tab => {
+            tab.style.display = 'none';
+        });
+        document.getElementById(tabName).style.display = 'block';
+
+        const activeTabs = document.querySelectorAll('.tab');
+        activeTabs.forEach(tab => {
+            tab.classList.remove('active');
+        });
+        document.querySelector(`.tab[onclick="showTab('${tabName}')"]`).classList.add('active');
+
+        if (tabName === 'labs') {
+            showSubTab('lab1'); // Default to Lab1
+        }
+    }
+
+    function showSubTab(subTabName) {
+        const subTabs = document.querySelectorAll('.sub-tab-content');
+        subTabs.forEach(subTab => {
+            subTab.style.display = 'none';
+        });
+        document.getElementById(subTabName).style.display = 'block';
+
+        const activeSubTabs = document.querySelectorAll('.sub-tab');
+        activeSubTabs.forEach(subTab => {
+            subTab.classList.remove('active');
+        });
+        document.querySelector(`.sub-tab[onclick="showSubTab('${subTabName}')"]`).classList.add('active');
+    }
+
+    function addInfo() {
+        const name = document.getElementById('name').value;
+        const experience = document.getElementById('experience').value;
+        const education = document.getElementById('education').value;
+        const skills = document.getElementById('skills').value;
+        const output = document.getElementById('cv-output');
+        
+        if (name && experience && education && skills) {
+            if (currentEditIndex !== null) {
+                output.children[currentEditIndex].innerHTML = `
+                    <h3>${name}</h3>
+                    <p><strong>Experience:</strong> ${experience}</p>
+                    <p><strong>Education:</strong> ${education}</p>
+                    <p><strong>Skills:</strong> ${skills}</p>
+                    <button class="edit-button" onclick="editInfo(${currentEditIndex})">Edit</button>
+                    <button class="delete-button" onclick="deleteInfo(${currentEditIndex})">Delete</button>
+                `;
+                currentEditIndex = null;
+            } else {
+                const entry = document.createElement('div');
+                entry.className = 'cv-entry';
+                entry.innerHTML = `
+                    <h3>${name}</h3>
+                    <p><strong>Experience:</strong> ${experience}</p>
+                    <p><strong>Education:</strong> ${education}</p>
+                    <p><strong>Skills:</strong> ${skills}</p>
+                    <button class="edit-button" onclick="editInfo(${output.children.length})">Edit</button>
+                    <button class="delete-button" onclick="deleteInfo(${output.children.length})">Delete</button>
+                `;
+                output.appendChild(entry);
+            }
+            document.getElementById('cv-form').reset(); // Reset the form
+        } else {
+            alert("Vui lòng nhập thông tin đầy đủ.");
+        }
+    }
+
+    function editInfo(index) {
+        const entry = document.getElementById('cv-output').children[index];
+        const name = entry.querySelector('h3').innerText;
+        const experience = entry.querySelector('p:nth-of-type(1)').innerText.replace("Experience: ", "");
+        const education = entry.querySelector('p:nth-of-type(2)').innerText.replace("Education: ", "");
+        const skills = entry.querySelector('p:nth-of-type(3)').innerText.replace("Skills: ", "");
+        
+        document.getElementById('name').value = name;
+        document.getElementById('experience').value = experience;
+        document.getElementById('education').value = education;
+        document.getElementById('skills').value = skills;
+
+        currentEditIndex = index;
+    }
+
+    function deleteInfo(index) {
+        document.getElementById('cv-output').removeChild(document.getElementById('cv-output').children[index]);
+    }
+</script>
+
+</body>
+</html>
